@@ -1,14 +1,14 @@
 package io.github.pablitohaddad.msuser.dto.security;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 
-@Getter @Setter @AllArgsConstructor @NoArgsConstructor
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor @ToString
 public class LoginDTO {
-
+    @Email
     private String email;
+    @Size(min = 6)
     private String password;
 
 }

@@ -30,10 +30,4 @@ public class UserController {
         return  ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
-//    @Operation(summary = "User login", description = "User login")
-//    @PostMapping
-//    public ResponseEntity<?> login(@Valid @RequestBody LoginDTO login){
-//        return null;
-//    }
-
 }
