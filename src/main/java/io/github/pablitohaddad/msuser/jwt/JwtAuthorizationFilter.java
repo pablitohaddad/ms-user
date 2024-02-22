@@ -19,6 +19,7 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
+    @Autowired
     private JwtUserDetailsService detailsService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -37,7 +38,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String username = JwtUtils.getUsernameFromyToken(token);
+        String username = JwtUtils.getUsernameFromToken(token);
 
         toAuthentication(request, username);
 

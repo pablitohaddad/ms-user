@@ -33,10 +33,18 @@ public class UserService {
             }else return UserMapper.toDTO(userRepository.save(UserMapper.toProduct(newUser)));
     }
     @Transactional(readOnly = true)
+    public UserResponseDTO getUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(String.format("User with id=%s not detected", id))
+        );
+        return UserMapper.toDTO(user);
+    }
+    @Transactional(readOnly = true)
     public User findByEmail(String email) {
         if (!userRepository.existsByEmail(email)){
             throw new EntityNotFoundException("Email not found");
         }else
             return userRepository.findByEmail(email);
     }
+
 }
