@@ -51,7 +51,6 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format("User id %d not found", id))
         );
-        log.info(userUpdate.getFirstName());
         User existing = userRepository.findByEmail(userUpdate.getEmail());
         if (existing != null && !existing.getId().equals(user.getId()))
             throw new UniqueViolationException(
