@@ -15,8 +15,5 @@ public class JwtUserDetails extends User {
         this.user = user;
 
     }
-    public Long getId(){
-        return this.user.getId();
-    }
 
 }
