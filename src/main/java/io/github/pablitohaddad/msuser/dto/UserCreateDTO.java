@@ -2,8 +2,6 @@ package io.github.pablitohaddad.msuser.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,7 +39,7 @@ public class UserCreateDTO {
     private String cep;
 
     @Size(min = 6)
-    private String password; // deve sair criptografada no bd
+    private String password;
 
     private Boolean active;
 }

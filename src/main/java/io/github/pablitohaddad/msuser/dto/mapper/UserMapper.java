@@ -1,5 +1,6 @@
 package io.github.pablitohaddad.msuser.dto.mapper;
 
+import io.github.pablitohaddad.msuser.dto.PasswordUserDto;
 import io.github.pablitohaddad.msuser.dto.UserCreateDTO;
 import io.github.pablitohaddad.msuser.dto.UserResponseDTO;
 import io.github.pablitohaddad.msuser.entities.User;

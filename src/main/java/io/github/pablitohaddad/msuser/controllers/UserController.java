@@ -1,8 +1,8 @@
 package io.github.pablitohaddad.msuser.controllers;
 
+import io.github.pablitohaddad.msuser.dto.PasswordUserDto;
 import io.github.pablitohaddad.msuser.dto.UserCreateDTO;
 import io.github.pablitohaddad.msuser.dto.UserResponseDTO;
-import io.github.pablitohaddad.msuser.dto.security.LoginDTO;
 import io.github.pablitohaddad.msuser.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,6 +32,12 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id){
         UserResponseDTO user = userService.getUserById(id);
         return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+    @Operation(summary = "Update password", description = "Update password")
+    @PutMapping("/{id}/{oldPassword}")
+    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @PathVariable String oldPassword, @RequestBody @Valid PasswordUserDto newPassword){
+        userService.updatePassword(id, oldPassword, newPassword);
+        return ResponseEntity.noContent().build();
     }
 
 }
