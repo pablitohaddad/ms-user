@@ -1,5 +1,7 @@
 package io.github.pablitohaddad.msuser.config;
 
+import io.github.pablitohaddad.msuser.jwt.JwtAuthenticationEntryPoint;
+import io.github.pablitohaddad.msuser.jwt.JwtAuthorizationFilter;
 import io.github.pablitohaddad.msuser.jwt.JwtToken;
 import io.github.pablitohaddad.msuser.services.UserService;
 import org.springframework.context.annotation.Bean;
@@ -14,15 +16,13 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 @EnableWebMvc
 @EnableMethodSecurity
 public class SpringSecurityConfig {
-
-    private JwtToken jwtToken;
-    private UserService userService;
 
     private static final String[] DOCUMENTATION_OPENAPI = {
             "/docs/index.html",
@@ -41,7 +41,11 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.POST).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .build();
+                .addFilterBefore(
+                        jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class
+                ).exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                ).build();
     }
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -50,5 +54,9 @@ public class SpringSecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+    @Bean
+    public JwtAuthorizationFilter jwtAuthorizationFilter(){
+        return new JwtAuthorizationFilter();
     }
 }

@@ -10,10 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Creating and Editing Users", description = "Creating and editing users")
 @RestController
@@ -28,6 +25,13 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserCreateDTO createDto){
         UserResponseDTO user = userService.createUser(createDto);
         return  ResponseEntity.status(HttpStatus.CREATED).body(user);
+    }
+
+    @Operation(summary = "Get user by id", description = "get user")
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id){
+        UserResponseDTO user = userService.getUserById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
 }
