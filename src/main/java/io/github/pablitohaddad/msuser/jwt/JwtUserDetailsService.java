@@ -2,6 +2,7 @@ package io.github.pablitohaddad.msuser.jwt;
 
 import io.github.pablitohaddad.msuser.entities.User;
 import io.github.pablitohaddad.msuser.services.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,7 +22,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     public JwtToken getTokenAuthenticated(String email){
-        return JwtUtils.createToken(email);
+            return JwtUtils.createToken(email);
     }
 
 }

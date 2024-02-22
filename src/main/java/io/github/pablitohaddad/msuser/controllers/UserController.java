@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Get all", description = "hello")
+@Tag(name = "Creating and Editing Users", description = "Creating and editing users")
 @RestController
 @RequestMapping("/v1/users")
 @RequiredArgsConstructor
