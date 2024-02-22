@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PasswordUserDto {
+public class PasswordUpdateDTO {
     @Size(min = 6)
     String password;
 }
