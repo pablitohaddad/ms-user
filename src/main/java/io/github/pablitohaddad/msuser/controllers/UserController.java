@@ -5,6 +5,7 @@ import io.github.pablitohaddad.msuser.dto.UserCreateDTO;
 import io.github.pablitohaddad.msuser.dto.UserResponseDTO;
 import io.github.pablitohaddad.msuser.dto.UserUpdateDTO;
 import io.github.pablitohaddad.msuser.exceptions.handler.ErrorMessage;
+import io.github.pablitohaddad.msuser.mqueue.UserPublisher;
 import io.github.pablitohaddad.msuser.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final UserPublisher userPublisher;
 
     @Operation(summary = "Create a new user", description = "Feature to create a new user",
             responses = {
