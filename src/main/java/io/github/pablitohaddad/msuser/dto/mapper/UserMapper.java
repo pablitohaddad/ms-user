@@ -13,7 +13,7 @@ public class UserMapper {
         return mapper.map(user, UserResponseDTO.class);
     }
 
-    public static User toProduct(UserCreateDTO createDto) {
+    public static User toUser(UserCreateDTO createDto) {
         ModelMapper mapper = new ModelMapper();
         return mapper.map(createDto, User.class);
     }

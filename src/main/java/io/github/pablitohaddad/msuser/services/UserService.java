@@ -43,7 +43,7 @@ public class UserService {
                 }catch (JsonProcessingException ex){
                     throw new RuntimeException("Create missing");
                 }
-                return UserMapper.toDTO(userRepository.save(UserMapper.toProduct(newUser)));
+                return UserMapper.toDTO(userRepository.save(UserMapper.toUser(newUser)));
             }
     }
     @Transactional(readOnly = true)
