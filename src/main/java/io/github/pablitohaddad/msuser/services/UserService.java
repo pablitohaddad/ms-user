@@ -1,13 +1,17 @@
 package io.github.pablitohaddad.msuser.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.github.pablitohaddad.msuser.dto.PasswordUpdateDTO;
 import io.github.pablitohaddad.msuser.dto.UserCreateDTO;
 import io.github.pablitohaddad.msuser.dto.UserResponseDTO;
 import io.github.pablitohaddad.msuser.dto.UserUpdateDTO;
 import io.github.pablitohaddad.msuser.dto.mapper.UserMapper;
 import io.github.pablitohaddad.msuser.entities.User;
+import io.github.pablitohaddad.msuser.entities.UserNotification;
+import io.github.pablitohaddad.msuser.enums.Events;
 import io.github.pablitohaddad.msuser.exceptions.PasswordInvalidException;
 import io.github.pablitohaddad.msuser.exceptions.UniqueViolationException;
+import io.github.pablitohaddad.msuser.mqueue.UserPublisher;
 import io.github.pablitohaddad.msuser.repositorys.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +20,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @RequiredArgsConstructor
 @Service
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserPublisher userPublisher;
     @Transactional
     public UserResponseDTO createUser(UserCreateDTO newUser) {
             String encryptedPassword = passwordEncoder.encode(newUser.getPassword());
@@ -30,7 +37,14 @@ public class UserService {
                 throw new UniqueViolationException("Email already exists");
             }if(userRepository.existsByCpf(newUser.getCpf())){
                 throw new UniqueViolationException("Cpf already exists");
-            }else return UserMapper.toDTO(userRepository.save(UserMapper.toProduct(newUser)));
+            }else{
+                try{
+                    userPublisher.sendNotification(new UserNotification(newUser.getEmail(), Events.CREATE, LocalDate.now().toString()));
+                }catch (JsonProcessingException ex){
+                    throw new RuntimeException("Create missing");
+                }
+                return UserMapper.toDTO(userRepository.save(UserMapper.toUser(newUser)));
+            }
     }
     @Transactional(readOnly = true)
     public UserResponseDTO getUserById(Long id) {

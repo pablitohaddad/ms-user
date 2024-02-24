@@ -2,8 +2,6 @@ package io.github.pablitohaddad.msuser.config;
 
 import io.github.pablitohaddad.msuser.jwt.JwtAuthenticationEntryPoint;
 import io.github.pablitohaddad.msuser.jwt.JwtAuthorizationFilter;
-import io.github.pablitohaddad.msuser.jwt.JwtToken;
-import io.github.pablitohaddad.msuser.services.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

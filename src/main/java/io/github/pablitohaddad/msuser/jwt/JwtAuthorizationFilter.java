@@ -1,7 +1,5 @@
 package io.github.pablitohaddad.msuser.jwt;
 
-import io.github.pablitohaddad.msuser.jwt.JwtUserDetailsService;
-import io.github.pablitohaddad.msuser.jwt.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
