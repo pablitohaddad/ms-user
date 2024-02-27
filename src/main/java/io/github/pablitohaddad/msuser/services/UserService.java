@@ -39,29 +39,17 @@ public class UserService {
                 throw new UniqueViolationException("Cpf already exists");
             }else{
                 try{
-                    userPublisher.sendNotification(new UserNotification(newUser.getEmail(), Events.CREATE, LocalDate.now().toString()));
+                    UserNotification notificationUpdatePassword = new UserNotification(newUser.getEmail(), Events.CREATE, LocalDate.now().toString());
+                    userPublisher.sendNotification(notificationUpdatePassword);
+                    log.info(String.valueOf(notificationUpdatePassword));
                 }catch (JsonProcessingException ex){
                     throw new RuntimeException("Create missing");
                 }
                 return UserMapper.toDTO(userRepository.save(UserMapper.toUser(newUser)));
             }
     }
-    @Transactional(readOnly = true)
-    public UserResponseDTO getUserById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(String.format("User with id=%s not detected", id))
-        );
-        return UserMapper.toDTO(user);
-    }
-    @Transactional(readOnly = true)
-    public User findByEmail(String email) {
-        if (!userRepository.existsByEmail(email)){
-            throw new EntityNotFoundException("Email not found");
-        }else
-            return userRepository.findByEmail(email);
-    }
     @Transactional
-    public void updateUser(Long id, UserUpdateDTO userUpdate) {
+    public void updateUser(Long id, UserUpdateDTO userUpdate) throws JsonProcessingException {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format("User id %d not found", id))
         );
@@ -73,6 +61,10 @@ public class UserService {
         UserMapper.updateByDto(userUpdate, user);
         userRepository.save(user);
         UserMapper.toDTO(user);
+        UserNotification notificationUpdate = new UserNotification(userUpdate.getEmail(), Events.UPDATE, LocalDate.now().toString());
+        userPublisher.sendNotification(notificationUpdate);
+        log.info(String.valueOf(notificationUpdate));
+
     }
     @Transactional
     public void updatePassword(Long id, String oldPassword, PasswordUpdateDTO newPassword) {
@@ -87,5 +79,27 @@ public class UserService {
         }
         user.setPassword(passwordEncoder.encode(newPassword.getPassword()));
         userRepository.save(user);
+        try{
+            UserNotification notificationUpdatePassword = new UserNotification(user.getEmail(), Events.UPDATE_PASSWORD, LocalDate.now().toString());
+            userPublisher.sendNotification(notificationUpdatePassword);
+            log.info(String.valueOf(notificationUpdatePassword));
+        }catch (JsonProcessingException ex){
+            throw new RuntimeException("Create missing");
+        }
+
+    }
+    @Transactional(readOnly = true)
+    public UserResponseDTO getUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(String.format("User with id=%s not detected", id))
+        );
+        return UserMapper.toDTO(user);
+    }
+    @Transactional(readOnly = true)
+    public User findByEmail(String email) {
+        if (!userRepository.existsByEmail(email)){
+            throw new EntityNotFoundException("Email not found");
+        }else
+            return userRepository.findByEmail(email);
     }
 }

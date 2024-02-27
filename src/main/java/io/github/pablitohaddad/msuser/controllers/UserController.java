@@ -1,5 +1,6 @@
 package io.github.pablitohaddad.msuser.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.github.pablitohaddad.msuser.dto.PasswordUpdateDTO;
 import io.github.pablitohaddad.msuser.dto.UserCreateDTO;
 import io.github.pablitohaddad.msuser.dto.UserResponseDTO;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    private final UserPublisher userPublisher;
 
     @Operation(summary = "Create a new user", description = "Feature to create a new user",
             responses = {
@@ -64,7 +64,7 @@ public class UserController {
                                     schema = @Schema(implementation = ErrorMessage.class)))
             })
     @PutMapping("/{id}")
-    public ResponseEntity<UserUpdateDTO> updateUser(@PathVariable Long id, @RequestBody @Valid UserUpdateDTO updatedUser){
+    public ResponseEntity<UserUpdateDTO> updateUser(@PathVariable Long id, @RequestBody @Valid UserUpdateDTO updatedUser) throws JsonProcessingException {
         userService.updateUser(id, updatedUser);
         return ResponseEntity.ok().body(updatedUser);
     }
