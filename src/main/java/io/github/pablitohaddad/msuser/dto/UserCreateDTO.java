@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -42,4 +43,6 @@ public class UserCreateDTO {
     private String password;
 
     private Boolean active;
+    public UserCreateDTO(String firstName, String lastName, String cpf, LocalDate date, String email, String password, boolean active) {
+    }
 }
