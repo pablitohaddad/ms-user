@@ -1,10 +1,8 @@
 package io.github.pablitohaddad.msuser.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.github.pablitohaddad.msuser.dto.PasswordUpdateDTO;
-import io.github.pablitohaddad.msuser.dto.UserCreateDTO;
-import io.github.pablitohaddad.msuser.dto.UserResponseDTO;
-import io.github.pablitohaddad.msuser.dto.UserUpdateDTO;
+import io.github.pablitohaddad.msuser.consumer.UserAddressConsumer;
+import io.github.pablitohaddad.msuser.dto.*;
 import io.github.pablitohaddad.msuser.dto.mapper.UserMapper;
 import io.github.pablitohaddad.msuser.entities.User;
 import io.github.pablitohaddad.msuser.entities.UserNotification;
@@ -29,24 +27,25 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserPublisher userPublisher;
+    private final UserAddressConsumer addressConsumer;
     @Transactional
     public UserResponseDTO createUser(UserCreateDTO newUser) {
-            String encryptedPassword = passwordEncoder.encode(newUser.getPassword());
-            newUser.setPassword(encryptedPassword);
-            if(userRepository.existsByEmail(newUser.getEmail())){
-                throw new UniqueViolationException("Email already exists");
-            }if(userRepository.existsByCpf(newUser.getCpf())){
-                throw new UniqueViolationException("Cpf already exists");
-            }else{
-                try{
-                    UserNotification notificationUpdatePassword = new UserNotification(newUser.getEmail(), Events.CREATE, LocalDate.now().toString());
-                    userPublisher.sendNotification(notificationUpdatePassword);
-                    log.info(String.valueOf(notificationUpdatePassword));
-                }catch (JsonProcessingException ex){
-                    throw new RuntimeException("Create missing");
-                }
-                return UserMapper.toDTO(userRepository.save(UserMapper.toUser(newUser)));
-            }
+        String encryptedPassword = passwordEncoder.encode(newUser.getPassword());
+        newUser.setPassword(encryptedPassword);
+        if(userRepository.existsByEmail(newUser.getEmail())){
+            throw new UniqueViolationException("Email already exists");
+        }
+        if(userRepository.existsByCpf(newUser.getCpf())){
+            throw new UniqueViolationException("Cpf already exists");
+        }
+        try{
+            UserNotification notificationUpdatePassword = new UserNotification(newUser.getEmail(), Events.CREATE, LocalDate.now().toString());
+            addressConsumer.complementAddress(new UserCreateAddressDTO(newUser.getCep()));
+            userPublisher.sendNotification(notificationUpdatePassword);
+        }catch (JsonProcessingException ex){
+            throw new RuntimeException("Create missing");
+        }
+        return UserMapper.toDTO(userRepository.save(UserMapper.toUser(newUser)));
     }
     @Transactional
     public void updateUser(Long id, UserUpdateDTO userUpdate) throws JsonProcessingException {
