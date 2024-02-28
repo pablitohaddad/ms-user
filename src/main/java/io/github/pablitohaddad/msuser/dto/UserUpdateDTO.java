@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -33,4 +34,6 @@ public class UserUpdateDTO {
 
     @Size(min = 9, max = 9)
     private String cep;
+
+    public UserUpdateDTO(String firstName, String lastName, LocalDate birthdate, String email, String cep){}
 }

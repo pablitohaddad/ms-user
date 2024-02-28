@@ -7,7 +7,9 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
 
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -44,4 +46,37 @@ public class User {
 
     @Column(name = "active")
     private Boolean active;
+
+    public User(long id, String firstName, String lastName, String cpf, LocalDate date, String email,String cep, String password, boolean active) {
+    }
+    public User(String firstName, String lastName, String cpf, LocalDate date, String email, String password, boolean active) {
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", birthdate=" + birthdate +
+                ", email='" + email + '\'' +
+                ", cep='" + cep + '\'' +
+                ", password='" + password + '\'' +
+                ", active=" + active +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(cpf, user.cpf) && Objects.equals(birthdate, user.birthdate) && Objects.equals(email, user.email) && Objects.equals(cep, user.cep) && Objects.equals(password, user.password) && Objects.equals(active, user.active);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, cpf, birthdate, email, cep, password, active);
+    }
 }
