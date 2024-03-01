@@ -62,7 +62,6 @@ public class UserService {
         UserMapper.toDTO(user);
         UserNotification notificationUpdate = new UserNotification(userUpdate.getEmail(), Events.UPDATE, LocalDate.now().toString());
         userPublisher.sendNotification(notificationUpdate);
-        log.info(String.valueOf(notificationUpdate));
 
     }
     @Transactional
@@ -73,10 +72,10 @@ public class UserService {
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new PasswordInvalidException("Old password is incorrect");
         }
-        if (newPassword.getPassword().equals(oldPassword)) {
+        if (newPassword.getNewPassword().equals(oldPassword)) {
             throw new PasswordInvalidException("New password must be different from old password");
         }
-        user.setPassword(passwordEncoder.encode(newPassword.getPassword()));
+        user.setPassword(passwordEncoder.encode(newPassword.getNewPassword()));
         userRepository.save(user);
         try{
             UserNotification notificationUpdatePassword = new UserNotification(user.getEmail(), Events.UPDATE_PASSWORD, LocalDate.now().toString());

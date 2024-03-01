@@ -12,5 +12,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PasswordUpdateDTO {
     @Size(min = 6)
-    String password;
+    String newPassword;
 }

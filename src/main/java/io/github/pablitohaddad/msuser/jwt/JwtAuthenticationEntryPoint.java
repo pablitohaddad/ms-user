@@ -11,7 +11,7 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException{
         log.info("Http Status 401 {}", authException.getMessage());
         response.setHeader("www-authenticate", "Bearer realm='api/v1/login'");
         response.sendError(401);
